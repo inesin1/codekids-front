@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 
 <template>
-    <h1>MainPageSen</h1>
+    <h1>MainPageSebdthn</h1>
 </template>
