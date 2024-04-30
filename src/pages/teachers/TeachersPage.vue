@@ -1,10 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { columns } from './columns'
-import  string from 'string'
-import dayjs from 'dayjs'
-import number from 'number'
 import { CourseTypes } from '../../types/course-types';
+import  string from 'string'
 
 
 // Data
@@ -12,10 +9,7 @@ const loading = ref(false)
 const data = [
   {
     id: 1,
-    name: string("Артём"),
-    birthday: dayjs(),
-    age: number(15),
-    teacher: { id: 1, name: 'Валерия' },
+    name: string("Валерия"),
     course: CourseTypes.GameMakerStudio,
   },
 ]
@@ -45,15 +39,6 @@ const data = [
         <template v-if="column.key === 'name'">
           {{ record.name }}
         </template>
-        <template v-if="column.key === 'birthday'">
-          <a-button>{{ record.bithday }}</a-button>
-        </template>
-        <template v-if="column.key === 'age'">
-          {{ record.age }}
-        </template>
-        <template v-if="column.key === 'teacher'">
-          {{ record.teacher.name }}
-        </template>
         <template v-if="column.key === 'course'">
           {{ record.course }}
         </template>
@@ -61,4 +46,3 @@ const data = [
     </a-table>
   </a-space>
 </template>
-

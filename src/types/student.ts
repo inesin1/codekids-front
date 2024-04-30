@@ -1,4 +1,6 @@
 import { Dayjs } from "dayjs";
+import { CourseTypes } from "./course-types";
+import { Teacher } from "./teacher";
 
 export interface Student {
     id: number,
