@@ -23,11 +23,12 @@ export const columns: TeachersColumnType[] = [
     ellipsis: true,
   },
   {
-    title: 'Курс',
+    title: 'Курсы',
     dataIndex: 'courses',
     key: 'courses',
     align: 'left',
     width: '70px',
     ellipsis: true,
   },
+  // TODO Столбец со студентами
 ]

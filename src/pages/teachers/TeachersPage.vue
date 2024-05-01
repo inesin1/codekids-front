@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { CourseTypes } from '../../types/course-types';
-import  string from 'string'
-
+import { CourseTypes } from '../../types/course-types'
+import { columns } from './columns'
 
 // Data
 const loading = ref(false)
 const data = [
   {
     id: 1,
-    name: string("Валерия"),
-    course: CourseTypes.GameMakerStudio,
+    name: 'Валерия',
+    courses: [CourseTypes.GameMakerStudio],
   },
 ]
 </script>
@@ -39,8 +38,8 @@ const data = [
         <template v-if="column.key === 'name'">
           {{ record.name }}
         </template>
-        <template v-if="column.key === 'course'">
-          {{ record.course }}
+        <template v-if="column.key === 'courses'">
+          {{ record.courses }}
         </template>
       </template>
     </a-table>

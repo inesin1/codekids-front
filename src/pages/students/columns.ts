@@ -39,7 +39,7 @@ export const columns: StudentsColumnType[] = [
     ellipsis: true,
   },
   {
-    title: 'Курс',
+    title: 'Курсы',
     dataIndex: 'courses',
     key: 'courses',
     align: 'left',

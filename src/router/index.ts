@@ -2,11 +2,11 @@ import { createWebHistory, createRouter } from 'vue-router'
 import MainPage from '../pages/MainPage.vue'
 import AuthPage from '../pages/AuthPage.vue'
 import LessonsPage from '../pages/lessons/LessonsPage.vue'
-import StudentsPage from '../pages/StudentsPage.vue'
 import TeachersPage from '../pages/TeachersPage.vue'
 import LessonsAnalyticsPage from '../pages/LessonsAnalyticsPage.vue'
 import FinanceAnalyticsPage from '../pages/FinanceAnalyticsPage.vue'
 import ProfilePage from '../pages/profile/ProfilePage.vue'
+import StudentsPage from '../pages/students/StudentsPage.vue'
 
 const routes = [
   {
