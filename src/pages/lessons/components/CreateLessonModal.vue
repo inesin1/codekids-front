@@ -1,7 +1,16 @@
 <script lang="ts" setup>
-const visible = defineModel<boolean>('visible')
+import { reactive } from 'vue';
+import { Lesson } from '../../../types/lesson';
+import { data as students} from '../../students/data'
+import { data as teachers} from '../../teachers/data'
+import { CourseTypes } from '../../../types/course-types';
 
-const createLesson = () => {}
+const emit = defineEmits<{
+  save: [lesson: Partial<Lesson>]
+}>()
+
+const visible = defineModel<boolean>('visible')
+const formState = reactive<Partial<Lesson>>({})
 </script>
 
 <template>
@@ -9,16 +18,42 @@ const createLesson = () => {}
     :open="visible"
     title="Добавление урока"
     okText="Добавить"
-    @ok="createLesson"
+    @ok="$emit('save', formState)"
     @cancel="visible = false"
     :width="800"
   >
     <a-form>
-      <a-form-item label="Ученик">
-        <a-select placeholder="Выбрать..." />
+      <a-form-item label="Дата и время">
+        <a-date-picker v-model:value="formState.datetime"/>
       </a-form-item>
       <a-form-item label="Ученик">
-        <a-select placeholder="Выбрать..." />
+        <a-select 
+          v-model:value="formState.student"
+          placeholder="Выбрать..."
+          :options="students"
+          :field-names="{label: 'name', value: 'id'}"
+          />
+      </a-form-item>
+      <a-form-item label="Преподаватель">
+        <a-select 
+          v-model:value="formState.teacher"
+          placeholder="Выбрать..."
+          :options="teachers"
+          :field-names="{label: 'name', value: 'id'}"
+          />
+      </a-form-item>
+      <a-form-item label="Курс">
+        <a-select 
+          placeholder="Выбрать..." 
+          v-model:value="formState.course"
+        >
+        <a-select-option 
+          v-for="courseType in CourseTypes"
+          :value="courseType"
+          >
+          {{ courseType }}
+        </a-select-option>
+      </a-select>
       </a-form-item>
     </a-form>
   </a-modal>

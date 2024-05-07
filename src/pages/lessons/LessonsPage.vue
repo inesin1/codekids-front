@@ -1,34 +1,30 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { columns } from './columns'
-import dayjs from 'dayjs'
-import { CourseTypes } from '../../types/course-types'
 import { LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
 import CreateLessonModal from './components/CreateLessonModal.vue'
-
+import {data} from './data'
 // Data
 const loading = ref(false)
-const data = [
-  {
-    id: 1,
-    datetime: dayjs(),
-    student: { id: 1, name: 'Артём' },
-    teacher: { id: 1, name: 'Валерия' },
-    course: CourseTypes.GameMakerStudio,
-    status: LessonStatusTypes.Assigned,
-    pay_status: PayStatusTypes.NotPaid,
-  },
-]
+const search = ref('')
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const createLessonModalVisible = ref(false)
+const filteredData = computed(() => {
+  return data.filter(lesson => 
+    lesson.student.name.toLowerCase().includes(search.value.toLowerCase()) ||
+    lesson.teacher.name.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-input-search placeholder="Поиск..." />
       <a-button type="primary" @click="createLessonModalVisible = true">
         + Добавить
       </a-button>
+      <a-range-picker :format="dateFormatList"/>
+      <a-input-search v-model:value="search" placeholder="Поиск..." />
     </a-space>
     <a-table
       style="
@@ -38,7 +34,7 @@ const createLessonModalVisible = ref(false)
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="data"
+      :data-source="filteredData"
       :loading="loading"
     >
       <template #bodyCell="{ column, record, index }">
@@ -58,14 +54,46 @@ const createLessonModalVisible = ref(false)
           {{ record.course }}
         </template>
         <template v-if="column.key === 'status'">
-          {{ record.status }}
+          <a-tag 
+            v-if="record.status === LessonStatusTypes.Canceled" 
+            color="red"
+          >
+            {{ record.status }}
+          </a-tag>
+          <a-tag 
+            v-else-if="record.status === LessonStatusTypes.Assigned" 
+            color="yellow"
+          >
+            {{ record.status }}
+          </a-tag>
+          <a-tag 
+            v-else-if="record.status === LessonStatusTypes.Completed" 
+            color="green"
+          >
+            {{ record.status }}
+          </a-tag>
+          <a-tag 
+            v-else-if="record.status === LessonStatusTypes.Rescheduled" 
+            color="orange"
+          >
+            {{ record.status }}
+        </a-tag>
         </template>
         <template v-if="column.key === 'pay_status'">
+          <a-tag 
+            v-if="record.pay_status === PayStatusTypes.Paid" 
+            color="green"
+          >
           {{ record.pay_status }}
+        </a-tag>
+        <a-tag 
+            v-else-if="record.pay_status === PayStatusTypes.NotPaid" 
+            color="red"
+          >{{ record.pay_status }}
+        </a-tag>
         </template>
       </template>
     </a-table>
   </a-space>
-
   <create-lesson-modal v-model:visible="createLessonModalVisible" />
 </template>

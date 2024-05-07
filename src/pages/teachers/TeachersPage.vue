@@ -1,24 +1,22 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { CourseTypes } from '../../types/course-types'
 import { columns } from './columns'
+import CreateTeacherModal from './components/CreateTeacherModal.vue'
+import {data} from './data'
 
 // Data
 const loading = ref(false)
-const data = [
-  {
-    id: 1,
-    name: 'Валерия',
-    courses: [CourseTypes.GameMakerStudio],
-  },
-]
+
+const createTeacherModalVisible = ref(false)
 </script>
 
 <template>
   <a-space direction="vertical">
     <a-space>
       <a-input-search placeholder="Поиск..." />
-      <a-button type="primary">+ Добавить</a-button>
+      <a-button type="primary" @click="createTeacherModalVisible = true">
+        + Добавить
+      </a-button>
     </a-space>
     <a-table
       style="
@@ -44,4 +42,5 @@ const data = [
       </template>
     </a-table>
   </a-space>
+  <create-teacher-modal v-model:visible="createTeacherModalVisible" />
 </template>
