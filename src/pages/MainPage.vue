@@ -1,5 +1,5 @@
 <script lang="ts" setup></script>
 
 <template>
-    <h1>MainPageSebdthn</h1>
+  <a-typography-title :level="2">Главная</a-typography-title>
 </template>

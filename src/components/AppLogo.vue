@@ -1,25 +1,18 @@
 <script lang="ts" setup>
-const {collapsed = false } = defineProps<{ collapsed: boolean }>();
+const { collapsed = false } = defineProps<{ collapsed: boolean }>()
 </script>
 
 <template>
-  <div class="container"><span class="blue">Code</span>Kids</div>
-
   <router-link to="/">
-    <a-flex class="ml-2 h-14 flex items-center ml-6">
-      <div class="flex items-center">
-        <div class="icon-[ph--rocket-duotone] text-sky-600 text-3xl" />
-        <span
-          v-show="!collapsed"
-          class="whitespace-nowrap ml-1 text-neutral-600 dark:text-neutral-200 font-black"
-        >
-          <span class="text-[#FF3107]">R</span>OCKET B2B
-        </span>
-      </div>
+    <a-flex>
+      <span v-if="!collapsed" class="text-white text-2xl ml-6">
+        <span class="text-[#42aaff]">Code</span>
+        Kids
+        <a-badge count="CRM" color="cyan" :offset="[0, -24]" />
+      </span>
+      <span v-else class="text-[#42aaff] text-2xl ml-8">C</span>
     </a-flex>
-</router-link>
-
-
+  </router-link>
 </template>
 
 <style scoped>

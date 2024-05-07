@@ -11,7 +11,7 @@ const collapsed = ref<boolean>(false)
   <a-config-provider :locale="ruRU">
     <a-layout style="min-height: 100vh">
       <a-layout-sider v-model:collapsed="collapsed" collapsible :width="260">
-        <app-aside />
+        <app-aside :collapsed="collapsed"/>
       </a-layout-sider>
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0">

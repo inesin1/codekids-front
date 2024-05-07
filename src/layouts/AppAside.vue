@@ -3,11 +3,13 @@ import { ref } from 'vue'
 import { PieChartOutlined, DesktopOutlined } from '@ant-design/icons-vue'
 import AppLogo from '../components/AppLogo.vue'
 
+const { collapsed = false } = defineProps<{ collapsed: boolean }>()
+
 const selectedKeys = ref<string[]>(['1'])
 </script>
 
 <template>
-  <app-logo style="margin: 12px" />
+  <app-logo :collapsed="collapsed" class="m-6" />
   <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
     <a-menu-item key="1" @click="$router.push({ name: 'Main' })">
       <pie-chart-outlined />

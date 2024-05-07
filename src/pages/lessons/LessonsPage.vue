@@ -4,6 +4,7 @@ import { columns } from './columns'
 import dayjs from 'dayjs'
 import { CourseTypes } from '../../types/course-types'
 import { LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
+import CreateLessonModal from './components/CreateLessonModal.vue'
 
 // Data
 const loading = ref(false)
@@ -18,13 +19,16 @@ const data = [
     pay_status: PayStatusTypes.NotPaid,
   },
 ]
+const createLessonModalVisible = ref(false)
 </script>
 
 <template>
   <a-space direction="vertical">
     <a-space>
       <a-input-search placeholder="Поиск..." />
-      <a-button type="primary">+ Добавить</a-button>
+      <a-button type="primary" @click="createLessonModalVisible = true">
+        + Добавить
+      </a-button>
     </a-space>
     <a-table
       style="
@@ -62,4 +66,6 @@ const data = [
       </template>
     </a-table>
   </a-space>
+
+  <create-lesson-modal v-model:visible="createLessonModalVisible" />
 </template>
