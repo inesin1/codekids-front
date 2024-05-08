@@ -1,19 +1,25 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { columns } from './columns'
 import CreateTeacherModal from './components/CreateTeacherModal.vue'
 import {data} from './data'
+import { Teacher } from '../../types/teacher';
 
 // Data
 const loading = ref(false)
-
+const search = ref('')
 const createTeacherModalVisible = ref(false)
+const filteredData = computed(() => {
+  return data.filter(teacher => 
+    teacher.name.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-input-search placeholder="Поиск..." />
+      <a-input-search v-model:value="search" placeholder="Поиск..." />
       <a-button type="primary" @click="createTeacherModalVisible = true">
         + Добавить
       </a-button>
@@ -26,7 +32,7 @@ const createTeacherModalVisible = ref(false)
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="data"
+      :data-source="filteredData"
       :loading="loading"
     >
       <template #bodyCell="{ column, record, index }">

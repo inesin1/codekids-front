@@ -1,7 +1,15 @@
 <script lang="ts" setup>
-const visible = defineModel<boolean>('visible')
+import { reactive } from 'vue';
+import { Lesson } from '../../../types/lesson';
+import { CourseTypes } from '../../../types/course-types';
 
 const createTeacher = () => {}
+const emit = defineEmits<{
+  save: [lesson: Partial<Lesson>]
+}>()
+
+const visible = defineModel<boolean>('visible')
+const formState = reactive<Partial<Lesson>>({})
 </script>
 
 <template>
@@ -15,10 +23,20 @@ const createTeacher = () => {}
   >
     <a-form>
       <a-form-item label="ФИО">
-        <a-select placeholder="Выбрать..." />
+        <a-input placeholder="..." />
       </a-form-item>
       <a-form-item label="Преподаваемые курсы">
-        <a-select placeholder="Выбрать..." />
+        <a-select 
+          placeholder="Выбрать..." 
+          v-model:value="formState.course"
+        >
+        <a-select-option 
+          v-for="courseType in CourseTypes"
+          :value="courseType"
+          >
+          {{ courseType }}
+        </a-select-option>
+      </a-select>
       </a-form-item>
     </a-form>
   </a-modal>
