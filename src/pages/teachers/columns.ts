@@ -23,7 +23,7 @@ export const columns: TeachersColumnType[] = [
     ellipsis: true,
   },
   {
-    title: 'Курсы',
+    title: 'Преподаваемые курсы',
     dataIndex: 'courses',
     key: 'courses',
     align: 'left',

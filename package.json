@@ -15,7 +15,8 @@
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.3.2",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.0",

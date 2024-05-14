@@ -1,28 +1,29 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { columns } from './columns'
-import dayjs from 'dayjs'
-import { CourseTypes } from '../../types/course-types'
+import CreateStudentModal from './components/CreateStudentModal.vue'
+import {data} from './data'
+
 
 // Data
 const loading = ref(false)
-const data = [
-  {
-    id: 1,
-    name: 'Артём',
-    birthday: dayjs(),
-    age: 15,
-    teacher: { id: 1, name: 'Валерия' },
-    courses: [CourseTypes.GameMakerStudio],
-  },
-]
+const search = ref('')
+const createStudentModalVisible = ref(false)
+const filteredData = computed(() => {
+  return data.filter(student => 
+    student.name.toLowerCase().includes(search.value.toLowerCase()) ||
+    student.teacher.name.toLowerCase().includes(search.value.toLowerCase())
+  )
+})
 </script>
 
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-input-search placeholder="Поиск..." />
-      <a-button type="primary">+ Добавить</a-button>
+      <a-input-search v-model:value="search" placeholder="Поиск..." />
+      <a-button type="primary" @click="createStudentModalVisible = true">
+        + Добавить
+      </a-button>
     </a-space>
     <a-table
       style="
@@ -32,7 +33,7 @@ const data = [
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="data"
+      :data-source="filteredData"
       :loading="loading"
     >
       <template #bodyCell="{ column, record, index }">
@@ -43,7 +44,7 @@ const data = [
           {{ record.name }}
         </template>
         <template v-if="column.key === 'birthday'">
-          {{ record.bithday }}
+          {{ record.birthday }}
         </template>
         <template v-if="column.key === 'age'">
           {{ record.age }}
@@ -57,4 +58,5 @@ const data = [
       </template>
     </a-table>
   </a-space>
+  <create-student-modal v-model:visible="createStudentModalVisible" />
 </template>
