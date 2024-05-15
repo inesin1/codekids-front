@@ -19,10 +19,10 @@ const filteredData = computed(() => {
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-input-search v-model:value="search" placeholder="Поиск..." />
       <a-button type="primary" @click="createTeacherModalVisible = true">
         + Добавить
       </a-button>
+      <a-input-search v-model:value="search" placeholder="Поиск..." />
     </a-space>
     <a-table
       style="

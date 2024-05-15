@@ -1,20 +1,25 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { columns } from './columns'
-import { LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
+import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
 import CreateLessonModal from './components/CreateLessonModal.vue'
-import {data} from './data'
+import { useApi } from '../../services/api'
+
 // Data
 const loading = ref(false)
 const search = ref('')
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const createLessonModalVisible = ref(false)
-const filteredData = computed(() => {
-  return data.filter(lesson => 
-    lesson.student.name.toLowerCase().includes(search.value.toLowerCase()) ||
-    lesson.teacher.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
+// const filteredData = computed(() => {
+//   return data.filter(lesson => 
+//     lesson.student.name.toLowerCase().includes(search.value.toLowerCase()) ||
+//     lesson.teacher.name.toLowerCase().includes(search.value.toLowerCase())
+//   )
+// })
+
+// Получаем данные с бэка
+const { getAll } = useApi<Lesson>('lesson')
+const { data } = getAll({search: search.value})
 </script>
 
 <template>
@@ -34,7 +39,7 @@ const filteredData = computed(() => {
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="filteredData"
+      :data-source="data"
       :loading="loading"
     >
       <template #bodyCell="{ column, record, index }">
