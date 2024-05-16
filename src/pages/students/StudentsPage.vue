@@ -1,25 +1,21 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref, watch } from 'vue'
 import { columns } from './columns'
 import CreateStudentModal from './components/CreateStudentModal.vue'
-import { createNotification } from '../../helpers/notifications';
-import { Student } from '../../types/student';
-import { useApi } from '../../services/api';
-
+import { createNotification } from '../../helpers/notifications'
+import { Student } from '../../types/student'
+import { useApi } from '../../services/api'
 
 // Data
-const loading = ref(false)
 const search = ref('')
 const createStudentModalVisible = ref(false)
-const filteredData = computed(() => {
-  return data.filter(student => 
-    student.name.toLowerCase().includes(search.value.toLowerCase()) ||
-    student.teacher.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
+
 // Получаем данные с бэка
 const { getAll, create } = useApi<Student>('student')
-const { data, isLoading } = getAll({ search: search.value })
+const { data, isLoading } = getAll({
+  search: search,
+  with: ['course', 'teacher'],
+})
 
 // Methods
 const saveStudent = async (student: Partial<Student>) => {
@@ -48,8 +44,8 @@ const saveStudent = async (student: Partial<Student>) => {
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="filteredData"
-      :loading="loading"
+      :data-source="data"
+      :loading="isLoading"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
@@ -67,11 +63,14 @@ const saveStudent = async (student: Partial<Student>) => {
         <template v-if="column.key === 'teacher'">
           {{ record.teacher.name }}
         </template>
-        <template v-if="column.key === 'courses'">
-          {{ record.courses }}
+        <template v-if="column.key === 'course'">
+          <a-tag>{{ record.course.name }}</a-tag>
         </template>
       </template>
     </a-table>
   </a-space>
-  <create-student-modal v-model:visible="createStudentModalVisible" />
+  <create-student-modal
+    v-model:visible="createStudentModalVisible"
+    @save="saveStudent"
+  />
 </template>

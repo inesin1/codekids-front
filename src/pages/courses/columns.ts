@@ -22,5 +22,4 @@ export const columns: CoursesColumnType[] = [
     width: '80px',
     ellipsis: true,
   },
-  // TODO Столбец со студентами
 ]

@@ -8,6 +8,6 @@ export interface Student {
     birthday: Dayjs
     age: number
     teacher: Teacher,
-    courses: Course,
+    course: Course,
     contacts: string
 }

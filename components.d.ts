@@ -35,6 +35,7 @@ declare module 'vue' {
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     ATable: typeof import('ant-design-vue/es')['Table']
     ATag: typeof import('ant-design-vue/es')['Tag']
+    ATypographyLink: typeof import('ant-design-vue/es')['TypographyLink']
     ATypographyTitle: typeof import('ant-design-vue/es')['TypographyTitle']
     FormSchema: typeof import('./src/components/FormSchema.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -5,7 +5,7 @@ import AppLogo from '../components/AppLogo.vue'
 
 const { collapsed = false } = defineProps<{ collapsed: boolean }>()
 
-const selectedKeys = ref<string[]>(['1'])
+const selectedKeys = ref<string[]>([])
 </script>
 
 <template>
@@ -27,16 +27,20 @@ const selectedKeys = ref<string[]>(['1'])
       <desktop-outlined />
       <span>Преподаватели</span>
     </a-menu-item>
+    <a-menu-item key="5" @click="$router.push({ name: 'Courses' })">
+      <desktop-outlined />
+      <span>Курсы</span>
+    </a-menu-item>
     <a-sub-menu>
       <template #title>
         <desktop-outlined />
         <span>Аналитика</span>
       </template>
-      <a-menu-item key="5" @click="$router.push({ name: 'LessonsAnalytics' })">
+      <a-menu-item key="6" @click="$router.push({ name: 'LessonsAnalytics' })">
         <desktop-outlined />
         Проведенные уроки
       </a-menu-item>
-      <a-menu-item key="6" @click="$router.push({ name: 'FinanceAnalytics' })">
+      <a-menu-item key="7" @click="$router.push({ name: 'FinanceAnalytics' })">
         <desktop-outlined />
         Доходы
       </a-menu-item>

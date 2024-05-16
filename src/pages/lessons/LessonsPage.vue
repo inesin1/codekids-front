@@ -4,7 +4,7 @@ import { columns } from './columns'
 import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
 import CreateLessonModal from './components/CreateLessonModal.vue'
 import { useApi } from '../../services/api'
-import { createNotification } from '../../helpers/notifications';
+import { createNotification } from '../../helpers/notifications'
 
 // Data
 const search = ref('')
@@ -13,7 +13,10 @@ const createLessonModalVisible = ref(false)
 
 // Получаем данные с бэка
 const { getAll, create } = useApi<Lesson>('lesson')
-const { data, isLoading } = getAll({ search: search.value })
+const { data, isLoading } = getAll({
+  search: search,
+  with: ['teacher', 'student', 'course'],
+})
 
 // Methods
 const saveLesson = async (lesson: Partial<Lesson>) => {
@@ -54,13 +57,17 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
           {{ record.datetime }}
         </template>
         <template v-if="column.key === 'student'">
-          <a-button>{{ record.student.name }}</a-button>
+          <a-typography-link>
+            {{ record.student.name }}
+          </a-typography-link>
         </template>
         <template v-if="column.key === 'teacher'">
-          {{ record.teacher.name }}
+          <a-typography-link>
+            {{ record.teacher.name }}
+          </a-typography-link>
         </template>
         <template v-if="column.key === 'course'">
-          {{ record.course }}
+          <a-tag>{{ record.course.name }}</a-tag>
         </template>
         <template v-if="column.key === 'status'">
           <a-tag
@@ -101,5 +108,8 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       </template>
     </a-table>
   </a-space>
-  <create-lesson-modal v-model:visible="createLessonModalVisible" @save="saveLesson"/>
+  <create-lesson-modal
+    v-model:visible="createLessonModalVisible"
+    @save="saveLesson"
+  />
 </template>
