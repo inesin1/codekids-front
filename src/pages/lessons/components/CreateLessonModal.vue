@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive } from 'vue'
 import { Lesson } from '../../../types/lesson'
-import { CourseTypes } from '../../../types/course-types'
+import { Course } from '../../../types/course'
 import { useApi } from '../../../services/api'
 import { Student } from '../../../types/student'
 import { Teacher } from '../../../types/teacher'
@@ -15,8 +15,10 @@ const formState = reactive<Partial<Lesson>>({})
 
 const { getAll: getStudents } = useApi<Student>('student')
 const { getAll: getTeachers } = useApi<Teacher>('teacher')
+const { getAll: getCourses } = useApi<Course>('course')
 const { data: students } = getStudents()
 const { data: teachers } = getTeachers()
+const { data: courses } = getCourses()
 </script>
 
 <template>
@@ -49,14 +51,12 @@ const { data: teachers } = getTeachers()
         />
       </a-form-item>
       <a-form-item label="Курс">
-        <a-select placeholder="Выбрать..." v-model:value="formState.course">
-          <a-select-option
-            v-for="courseType in CourseTypes"
-            :value="courseType"
-          >
-            {{ courseType }}
-          </a-select-option>
-        </a-select>
+          <a-select
+          v-model:value="formState.course.id"
+          placeholder="Выбрать..."
+          :options="courses"
+          :field-names="{ label: 'name', value: 'id' }"
+        />
       </a-form-item>
     </a-form>
   </a-modal>

@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { reactive } from 'vue';
 import { Lesson } from '../../../types/lesson';
-import { CourseTypes } from '../../../types/course-types';
+import { Course } from '../../../types/course';
+import { useApi } from '../../../services/api'
 
 const createTeacher = () => {}
 const emit = defineEmits<{
@@ -10,6 +11,9 @@ const emit = defineEmits<{
 
 const visible = defineModel<boolean>('visible')
 const formState = reactive<Partial<Lesson>>({})
+
+const { getAll: getCourses } = useApi<Course>('course')
+const { data: courses } = getCourses()
 </script>
 
 <template>
@@ -26,17 +30,12 @@ const formState = reactive<Partial<Lesson>>({})
         <a-input placeholder="..." />
       </a-form-item>
       <a-form-item label="Преподаваемые курсы">
-        <a-select 
-          placeholder="Выбрать..." 
-          v-model:value="formState.course"
-        >
-        <a-select-option 
-          v-for="courseType in CourseTypes"
-          :value="courseType"
-          >
-          {{ courseType }}
-        </a-select-option>
-      </a-select>
+        <a-select
+          v-model:value="formState.course.id"
+          placeholder="Выбрать..."
+          :options="courses"
+          :field-names="{ label: 'name', value: 'id' }"
+        />
       </a-form-item>
     </a-form>
   </a-modal>

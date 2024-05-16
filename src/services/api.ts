@@ -2,7 +2,7 @@ import { instance } from './instance'
 import { QueryOptions } from '../types/query-options'
 import { useQuery, useQueryClient } from 'vue-query'
 
-type ApiType = 'lesson' | 'student' | 'teacher'
+type ApiType = 'lesson' | 'student' | 'teacher'| 'course'
 
 export const useApi = <EntityType>(
   type: ApiType,

@@ -1,5 +1,5 @@
 import { Dayjs } from "dayjs";
-import { CourseTypes } from "./course-types";
+import { Course } from "./course";
 import { Teacher } from "./teacher";
 
 export interface Student {
@@ -8,6 +8,6 @@ export interface Student {
     birthday: Dayjs
     age: number
     teacher: Teacher,
-    courses: CourseTypes[]
+    courses: Course,
     contacts: string
 }

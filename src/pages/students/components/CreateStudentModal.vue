@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { Lesson } from '../../../types/lesson';
-import { CourseTypes } from '../../../types/course-types'
-import { data as teachers} from '../../teachers/data'
-import { reactive } from 'vue';
+import { reactive } from 'vue'
+import { Lesson } from '../../../types/lesson'
+import { Course } from '../../../types/course'
+import { useApi } from '../../../services/api'
+import { Teacher } from '../../../types/teacher'
+
 
 const createStudent = () => {}
 const emit = defineEmits<{
@@ -11,6 +13,11 @@ const emit = defineEmits<{
 
 const visible = defineModel<boolean>('visible')
 const formState = reactive<Partial<Lesson>>({})
+
+const { getAll: getTeachers } = useApi<Teacher>('teacher')
+const { getAll: getCourses } = useApi<Course>('course')
+const { data: teachers } = getTeachers()
+const { data: courses } = getCourses()
 </script>
 
 <template>
@@ -33,16 +40,12 @@ const formState = reactive<Partial<Lesson>>({})
         <a-input placeholder=" " />
       </a-form-item>
       <a-form-item label="Курс">
-        <a-select placeholder="Выбрать..." 
-        v-model:value="formState.course"
-        >
-        <a-select-option 
-          v-for="courseType in CourseTypes"
-          :value="courseType"
-          >
-          {{ courseType }}
-        </a-select-option>
-      </a-select>
+        <a-select
+          v-model:value="formState.course.id"
+          placeholder="Выбрать..."
+          :options="courses"
+          :field-names="{ label: 'name', value: 'id' }"
+        />
       </a-form-item>
       <a-form-item label="Преодаватель">
         <a-select 

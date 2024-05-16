@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { columns } from './columns'
-import CreateTeacherModal from './components/CreateTeacherModal.vue'
-import {data} from './data'
+import CreateTeacherModal from './components/CreateTeacherModal.vue';
 import { Teacher } from '../../types/teacher';
+import { useApi } from '../../services/api';
+import { createNotification } from '../../helpers/notifications';
 
 // Data
 const loading = ref(false)
@@ -14,6 +15,19 @@ const filteredData = computed(() => {
     teacher.name.toLowerCase().includes(search.value.toLowerCase())
   )
 })
+// Получаем данные с бэка
+const { getAll, create } = useApi<Teacher>('teacher')
+const { data, isLoading } = getAll({ search: search.value })
+
+// Methods
+const saveTeacher = async (teacher: Partial<Teacher>) => {
+  try {
+    await create(teacher)
+    createNotification('success', 'Преподаватель добавлен')
+  } catch (e) {
+    createNotification('error', e)
+  }
+}
 </script>
 
 <template>

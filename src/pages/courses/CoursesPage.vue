@@ -1,31 +1,28 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { columns } from './columns'
-import CreateStudentModal from './components/CreateStudentModal.vue'
 import { createNotification } from '../../helpers/notifications';
-import { Student } from '../../types/student';
 import { useApi } from '../../services/api';
-
+import { Course } from '../../types/course';
 
 // Data
 const loading = ref(false)
 const search = ref('')
-const createStudentModalVisible = ref(false)
+const createCourseModalVisible = ref(false)
 const filteredData = computed(() => {
-  return data.filter(student => 
-    student.name.toLowerCase().includes(search.value.toLowerCase()) ||
-    student.teacher.name.toLowerCase().includes(search.value.toLowerCase())
+  return data.filter(teacher => 
+    teacher.name.toLowerCase().includes(search.value.toLowerCase())
   )
 })
 // Получаем данные с бэка
-const { getAll, create } = useApi<Student>('student')
+const { getAll, create } = useApi<Course>('course')
 const { data, isLoading } = getAll({ search: search.value })
 
 // Methods
-const saveStudent = async (student: Partial<Student>) => {
+const saveCourse = async (course: Partial<Course>) => {
   try {
-    await create(student)
-    createNotification('success', 'Ученик добавлен')
+    await create(course)
+    createNotification('success', 'Курс добавлен')
   } catch (e) {
     createNotification('error', e)
   }
@@ -35,7 +32,7 @@ const saveStudent = async (student: Partial<Student>) => {
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-button type="primary" @click="createStudentModalVisible = true">
+      <a-button type="primary" @click="createCourseModalVisible = true">
         + Добавить
       </a-button>
       <a-input-search v-model:value="search" placeholder="Поиск..." />
@@ -58,20 +55,8 @@ const saveStudent = async (student: Partial<Student>) => {
         <template v-if="column.key === 'name'">
           {{ record.name }}
         </template>
-        <template v-if="column.key === 'birthday'">
-          {{ record.birthday }}
-        </template>
-        <template v-if="column.key === 'age'">
-          {{ record.age }}
-        </template>
-        <template v-if="column.key === 'teacher'">
-          {{ record.teacher.name }}
-        </template>
-        <template v-if="column.key === 'courses'">
-          {{ record.courses }}
-        </template>
       </template>
     </a-table>
   </a-space>
-  <create-student-modal v-model:visible="createStudentModalVisible" />
+  <create-teacher-modal v-model:visible="createCourseModalVisible" />
 </template>

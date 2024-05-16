@@ -1,7 +1,7 @@
 import { Dayjs } from "dayjs"
 import { Student } from "./student"
 import { Teacher } from "./teacher"
-import { CourseTypes } from "./course-types"
+import { Course } from "./course"
 
 export enum LessonStatusTypes {
     Assigned = 'Назначен',
@@ -20,7 +20,7 @@ export interface Lesson {
     datetime: Dayjs
     student: Student
     teacher: Teacher
-    course: CourseTypes
+    course: Course
     status: LessonStatusTypes
     pay_status: PayStatusTypes
 }
