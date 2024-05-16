@@ -1,25 +1,29 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { columns } from './columns'
 import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
 import CreateLessonModal from './components/CreateLessonModal.vue'
 import { useApi } from '../../services/api'
+import { createNotification } from '../../helpers/notifications';
 
 // Data
-const loading = ref(false)
 const search = ref('')
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
 const createLessonModalVisible = ref(false)
-// const filteredData = computed(() => {
-//   return data.filter(lesson => 
-//     lesson.student.name.toLowerCase().includes(search.value.toLowerCase()) ||
-//     lesson.teacher.name.toLowerCase().includes(search.value.toLowerCase())
-//   )
-// })
 
 // Получаем данные с бэка
-const { getAll } = useApi<Lesson>('lesson')
-const { data } = getAll({search: search.value})
+const { getAll, create } = useApi<Lesson>('lesson')
+const { data, isLoading } = getAll({ search: search.value })
+
+// Methods
+const saveLesson = async (lesson: Partial<Lesson>) => {
+  try {
+    await create(lesson)
+    createNotification('success', 'Урок добавлен')
+  } catch (e) {
+    createNotification('error', e)
+  }
+}
 </script>
 
 <template>
@@ -28,7 +32,7 @@ const { data } = getAll({search: search.value})
       <a-button type="primary" @click="createLessonModalVisible = true">
         + Добавить
       </a-button>
-      <a-range-picker :format="dateFormatList"/>
+      <a-range-picker :format="dateFormatList" />
       <a-input-search v-model:value="search" placeholder="Поиск..." />
     </a-space>
     <a-table
@@ -40,7 +44,7 @@ const { data } = getAll({search: search.value})
       "
       :columns="columns"
       :data-source="data"
-      :loading="loading"
+      :loading="isLoading"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
@@ -59,46 +63,43 @@ const { data } = getAll({search: search.value})
           {{ record.course }}
         </template>
         <template v-if="column.key === 'status'">
-          <a-tag 
-            v-if="record.status === LessonStatusTypes.Canceled" 
+          <a-tag
+            v-if="record.status === LessonStatusTypes.Canceled"
             color="red"
           >
             {{ record.status }}
           </a-tag>
-          <a-tag 
-            v-else-if="record.status === LessonStatusTypes.Assigned" 
+          <a-tag
+            v-else-if="record.status === LessonStatusTypes.Assigned"
             color="yellow"
           >
             {{ record.status }}
           </a-tag>
-          <a-tag 
-            v-else-if="record.status === LessonStatusTypes.Completed" 
+          <a-tag
+            v-else-if="record.status === LessonStatusTypes.Completed"
             color="green"
           >
             {{ record.status }}
           </a-tag>
-          <a-tag 
-            v-else-if="record.status === LessonStatusTypes.Rescheduled" 
+          <a-tag
+            v-else-if="record.status === LessonStatusTypes.Rescheduled"
             color="orange"
           >
             {{ record.status }}
-        </a-tag>
+          </a-tag>
         </template>
         <template v-if="column.key === 'pay_status'">
-          <a-tag 
-            v-if="record.pay_status === PayStatusTypes.Paid" 
-            color="green"
-          >
-          {{ record.pay_status }}
-        </a-tag>
-        <a-tag 
-            v-else-if="record.pay_status === PayStatusTypes.NotPaid" 
+          <a-tag v-if="record.pay_status === PayStatusTypes.Paid" color="green">
+            {{ record.pay_status }}
+          </a-tag>
+          <a-tag
+            v-else-if="record.pay_status === PayStatusTypes.NotPaid"
             color="red"
-          >{{ record.pay_status }}
-        </a-tag>
+            >{{ record.pay_status }}
+          </a-tag>
         </template>
       </template>
     </a-table>
   </a-space>
-  <create-lesson-modal v-model:visible="createLessonModalVisible" />
+  <create-lesson-modal v-model:visible="createLessonModalVisible" @save="saveLesson"/>
 </template>
