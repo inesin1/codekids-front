@@ -1,10 +1,10 @@
 import { createWebHistory, createRouter } from 'vue-router'
 import MainPage from '../pages/MainPage.vue'
-import AuthPage from '../pages/AuthPage.vue'
+import AuthPage from '../pages/auth/AuthPage.vue'
 import LessonsPage from '../pages/lessons/LessonsPage.vue'
 import TeachersPage from '../pages/teachers/TeachersPage.vue'
-import LessonsAnalyticsPage from '../pages/LessonsAnalyticsPage.vue'
-import FinanceAnalyticsPage from '../pages/FinanceAnalyticsPage.vue'
+import LessonsAnalyticsPage from '../pages/LessonsAnalytics/LessonsAnalyticsPage.vue'
+import FinanceAnalyticsPage from '../pages/FinanceAnalytics/FinanceAnalyticsPage.vue'
 import ProfilePage from '../pages/profile/ProfilePage.vue'
 import StudentsPage from '../pages/students/StudentsPage.vue'
 
