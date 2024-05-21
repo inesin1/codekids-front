@@ -1,23 +1,18 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { columns } from './columns'
-import CreateTeacherModal from './components/CreateTeacherModal.vue';
-import { Teacher } from '../../types/teacher';
-import { useApi } from '../../services/api';
-import { createNotification } from '../../helpers/notifications';
+import CreateTeacherModal from './components/CreateTeacherModal.vue'
+import { Teacher } from '../../types/teacher'
+import { useApi } from '../../services/api'
+import { createNotification } from '../../helpers/notifications'
 
 // Data
-const loading = ref(false)
 const search = ref('')
 const createTeacherModalVisible = ref(false)
-const filteredData = computed(() => {
-  return data.filter(teacher => 
-    teacher.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
+
 // Получаем данные с бэка
 const { getAll, create } = useApi<Teacher>('teacher')
-const { data, isLoading } = getAll({ search: search.value })
+const { data, isLoading } = getAll({ search: search, with: ['courses'] })
 
 // Methods
 const saveTeacher = async (teacher: Partial<Teacher>) => {
@@ -46,8 +41,8 @@ const saveTeacher = async (teacher: Partial<Teacher>) => {
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="filteredData"
-      :loading="loading"
+      :data-source="data"
+      :loading="isLoading"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
@@ -57,10 +52,15 @@ const saveTeacher = async (teacher: Partial<Teacher>) => {
           {{ record.name }}
         </template>
         <template v-if="column.key === 'courses'">
-          {{ record.courses }}
+          <a-tag v-for="course in record.courses" :key="course.id">
+            {{ course.name }}
+          </a-tag>
         </template>
       </template>
     </a-table>
   </a-space>
-  <create-teacher-modal v-model:visible="createTeacherModalVisible" />
+  <create-teacher-modal
+    v-model:visible="createTeacherModalVisible"
+    @save="saveTeacher"
+  />
 </template>

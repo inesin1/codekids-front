@@ -1,12 +1,11 @@
 import { instance } from './instance'
 import { QueryOptions } from '../types/query-options'
 import { useQuery, useQueryClient } from 'vue-query'
+import { isRef } from 'vue'
 
-type ApiType = 'lesson' | 'student' | 'teacher'| 'course'
+type ApiType = 'lesson' | 'student' | 'teacher' | 'course'
 
-export const useApi = <EntityType>(
-  type: ApiType,
-) => {
+export const useApi = <EntityType>(type: ApiType) => {
   const queryClient = useQueryClient()
 
   const getAll = (options?: QueryOptions) =>
@@ -14,7 +13,12 @@ export const useApi = <EntityType>(
       [type, options],
       async () => {
         const { data } = await instance.get<EntityType[]>(`${type}`, {
-          params: options
+          params: {
+            ...options,
+            search: isRef(options?.search)
+              ? options?.search?.value
+              : options?.search,
+          },
         })
         return data
       },
@@ -24,25 +28,25 @@ export const useApi = <EntityType>(
   const getOne = (id: number, options?: QueryOptions) =>
     useQuery([type, id], async () => {
       const { data } = await instance.get<EntityType>(`${type}/${id}`, {
-        params: options
+        params: options,
       })
       return data
     })
 
   const create = async (body: Partial<EntityType>) =>
-    instance.post<EntityType>(`${type}`, body).then(async res => {
+    instance.post<EntityType>(`${type}`, body).then(async (res) => {
       await queryClient.invalidateQueries([type])
       return res.data
     })
 
   const update = async (id: number, body: Partial<EntityType>) =>
-    instance.patch<EntityType>(`${type}/${id}`, body).then(async res => {
+    instance.patch<EntityType>(`${type}/${id}`, body).then(async (res) => {
       await queryClient.invalidateQueries([type])
       return res.data
     })
 
   const updateArray = async (body: Partial<EntityType>[]) =>
-    instance.patch<EntityType[]>(`${type}/array`, body).then(async res => {
+    instance.patch<EntityType[]>(`${type}/array`, body).then(async (res) => {
       await queryClient.invalidateQueries([type])
       return res.data
     })

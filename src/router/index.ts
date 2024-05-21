@@ -7,6 +7,7 @@ import LessonsAnalyticsPage from '../pages/LessonsAnalytics/LessonsAnalyticsPage
 import FinanceAnalyticsPage from '../pages/FinanceAnalytics/FinanceAnalyticsPage.vue'
 import ProfilePage from '../pages/profile/ProfilePage.vue'
 import StudentsPage from '../pages/students/StudentsPage.vue'
+import CoursesPage from '../pages/courses/CoursesPage.vue'
 
 const routes = [
   {
@@ -33,6 +34,11 @@ const routes = [
     name: 'Teachers',
     path: '/teachers',
     component: TeachersPage,
+  },
+  {
+    name: 'Courses',
+    path: '/courses',
+    component: CoursesPage,
   },
   {
     name: 'LessonsAnalytics',

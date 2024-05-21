@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { reactive } from 'vue';
-import { Lesson } from '../../../types/lesson';
-import { Course } from '../../../types/course';
+import { reactive } from 'vue'
+import { Course } from '../../../types/course'
 import { useApi } from '../../../services/api'
+import { Teacher } from '../../../types/teacher'
 
-const createTeacher = () => {}
 const emit = defineEmits<{
-  save: [lesson: Partial<Lesson>]
+  save: [teacher: Partial<Teacher>]
 }>()
 
 const visible = defineModel<boolean>('visible')
-const formState = reactive<Partial<Lesson>>({})
+const formState = reactive<Partial<Teacher> & { courses_ids?: number[] }>({})
 
 const { getAll: getCourses } = useApi<Course>('course')
 const { data: courses } = getCourses()
@@ -21,17 +20,18 @@ const { data: courses } = getCourses()
     :open="visible"
     title="Добавление преподавателя"
     okText="Добавить"
-    @ok="createTeacher"
+    @ok="$emit('save', formState)"
     @cancel="visible = false"
     :width="800"
   >
     <a-form>
       <a-form-item label="ФИО">
-        <a-input placeholder="..." />
+        <a-input v-model:value="formState.name" />
       </a-form-item>
       <a-form-item label="Преподаваемые курсы">
         <a-select
-          v-model:value="formState.course.id"
+          v-model:value="formState.courses_ids"
+          mode="multiple"
           placeholder="Выбрать..."
           :options="courses"
           :field-names="{ label: 'name', value: 'id' }"

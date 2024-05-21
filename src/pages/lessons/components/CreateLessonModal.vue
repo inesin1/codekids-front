@@ -11,7 +11,13 @@ const emit = defineEmits<{
 }>()
 
 const visible = defineModel<boolean>('visible')
-const formState = reactive<Partial<Lesson>>({})
+const formState = reactive<
+  Partial<Lesson> & {
+    teacher_id?: number
+    student_id?: number
+    course_id?: number
+  }
+>({})
 
 const { getAll: getStudents } = useApi<Student>('student')
 const { getAll: getTeachers } = useApi<Teacher>('teacher')
@@ -19,6 +25,12 @@ const { getAll: getCourses } = useApi<Course>('course')
 const { data: students } = getStudents()
 const { data: teachers } = getTeachers()
 const { data: courses } = getCourses()
+
+// Methods
+const onOk = () => {
+  emit('save', formState)
+  visible.value = false
+}
 </script>
 
 <template>
@@ -26,7 +38,7 @@ const { data: courses } = getCourses()
     :open="visible"
     title="Добавление урока"
     okText="Добавить"
-    @ok="$emit('save', formState)"
+    @ok="onOk"
     @cancel="visible = false"
     :width="800"
   >
@@ -36,7 +48,7 @@ const { data: courses } = getCourses()
       </a-form-item>
       <a-form-item label="Ученик">
         <a-select
-          v-model:value="formState.student.id"
+          v-model:value="formState.student_id"
           placeholder="Выбрать..."
           :options="students"
           :field-names="{ label: 'name', value: 'id' }"
@@ -44,15 +56,15 @@ const { data: courses } = getCourses()
       </a-form-item>
       <a-form-item label="Преподаватель">
         <a-select
-          v-model:value="formState.teacher.id"
+          v-model:value="formState.teacher_id"
           placeholder="Выбрать..."
           :options="teachers"
           :field-names="{ label: 'name', value: 'id' }"
         />
       </a-form-item>
       <a-form-item label="Курс">
-          <a-select
-          v-model:value="formState.course.id"
+        <a-select
+          v-model:value="formState.course_id"
           placeholder="Выбрать..."
           :options="courses"
           :field-names="{ label: 'name', value: 'id' }"

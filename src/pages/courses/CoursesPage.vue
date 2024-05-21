@@ -1,19 +1,15 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { columns } from './columns'
-import { createNotification } from '../../helpers/notifications';
-import { useApi } from '../../services/api';
-import { Course } from '../../types/course';
+import { createNotification } from '../../helpers/notifications'
+import { useApi } from '../../services/api'
+import { Course } from '../../types/course'
+import CreateCourseModal from './components/CreateCourseModal.vue'
 
 // Data
-const loading = ref(false)
 const search = ref('')
 const createCourseModalVisible = ref(false)
-const filteredData = computed(() => {
-  return data.filter(teacher => 
-    teacher.name.toLowerCase().includes(search.value.toLowerCase())
-  )
-})
+
 // Получаем данные с бэка
 const { getAll, create } = useApi<Course>('course')
 const { data, isLoading } = getAll({ search: search.value })
@@ -45,8 +41,8 @@ const saveCourse = async (course: Partial<Course>) => {
         cursor: pointer;
       "
       :columns="columns"
-      :data-source="filteredData"
-      :loading="loading"
+      :data-source="data"
+      :loading="isLoading"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
@@ -58,5 +54,8 @@ const saveCourse = async (course: Partial<Course>) => {
       </template>
     </a-table>
   </a-space>
-  <create-teacher-modal v-model:visible="createCourseModalVisible" />
+  <create-course-modal
+    v-model:visible="createCourseModalVisible"
+    @save="saveCourse"
+  />
 </template>
