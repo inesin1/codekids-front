@@ -1,11 +1,12 @@
-import { instance } from './instance'
 import { QueryOptions } from '../types/query-options'
 import { useQuery, useQueryClient } from 'vue-query'
 import { isRef } from 'vue'
+import { useAxiosInstance } from './instance'
 
 type ApiType = 'lesson' | 'student' | 'teacher' | 'course'
 
 export const useApi = <EntityType>(type: ApiType) => {
+  const { instance } = useAxiosInstance()
   const queryClient = useQueryClient()
 
   const getAll = (options?: QueryOptions) =>
@@ -22,7 +23,7 @@ export const useApi = <EntityType>(type: ApiType) => {
         })
         return data
       },
-      { initialData: [] }
+      { initialData: [] as EntityType[] }
     )
 
   const getOne = (id: number, options?: QueryOptions) =>

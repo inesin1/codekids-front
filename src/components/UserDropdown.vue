@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { UserOutlined, DownOutlined } from '@ant-design/icons-vue'
+import { useUserStore } from '../stores/user.store'
 
+const { logout } = useUserStore()
 const currentUserId = 1
 const profileLink = { name: 'Profile', params: { id: currentUserId } }
 </script>
@@ -20,9 +22,9 @@ const profileLink = { name: 'Profile', params: { id: currentUserId } }
     <template #overlay>
       <a-menu>
         <a-menu-item>
-          <router-link :to="profileLink"> Профиль </router-link>
+          <router-link :to="profileLink">Профиль</router-link>
         </a-menu-item>
-        <a-menu-item danger>Выход</a-menu-item>
+        <a-menu-item danger @click="logout">Выход</a-menu-item>
       </a-menu>
     </template>
   </a-dropdown>
