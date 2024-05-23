@@ -29,14 +29,14 @@ const onFinishFailed = (errorInfo: any) => {
   <div
     class="flex flex-col h-screen justify-center items-center dark:bg-neutral-800"
   >
-    <a-card class="w-[350px]">
+    <a-card class="w-[450px]">
       <div class="mb-5 w-full text-center">
         <div class="flex items-center justify-center">
           <div class="icon-[ph--CodeKids-duotone] text-3xl text-sky-600" />
           <div
             class="ml-1 text-2xl font-black text-neutral-600 dark:text-neutral-200"
           >
-            <span class="text-[#FF3107]">Code</span>Kids
+            <span class="text-[#4B5BEC]">Code</span>Kids
           </div>
         </div>
       </div>
