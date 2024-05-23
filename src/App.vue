@@ -3,15 +3,23 @@ import ruRU from 'ant-design-vue/es/locale/ru_RU'
 import { ref } from 'vue'
 import AppAside from './layouts/AppAside.vue'
 import AppHeader from './layouts/AppHeader.vue'
+import { useUserStore } from './stores/user.store'
 
+// Data
+const { currentUser } = useUserStore()
 const collapsed = ref<boolean>(false)
 </script>
 
 <template>
   <a-config-provider :locale="ruRU">
     <a-layout style="min-height: 100vh">
-      <a-layout-sider v-model:collapsed="collapsed" collapsible :width="260">
-        <app-aside :collapsed="collapsed"/>
+      <a-layout-sider
+        v-if="currentUser"
+        v-model:collapsed="collapsed"
+        collapsible
+        :width="260"
+      >
+        <app-aside :collapsed="collapsed" />
       </a-layout-sider>
       <a-layout>
         <a-layout-header style="background: #fff; padding: 0">

@@ -41,6 +41,7 @@ declare module 'vue' {
     ATableSummaryRow: typeof import('ant-design-vue/es')['TableSummaryRow']
     ATag: typeof import('ant-design-vue/es')['Tag']
     ATypographyLink: typeof import('ant-design-vue/es')['TypographyLink']
+    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     ATypographyTitle: typeof import('ant-design-vue/es')['TypographyTitle']
     FormSchema: typeof import('./src/components/FormSchema.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
