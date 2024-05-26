@@ -1,11 +1,15 @@
 <script lang="ts" setup>
 import { useRoute } from 'vue-router'
-import UserDropdown from '../components/UserDropdown.vue'
+import _ from 'lodash'
 import { computed } from 'vue'
 
 // Data
 const route = useRoute()
-const pathItems = computed(() => route.path.split('/'))
+const pageTitle = computed(() => {
+  const id = route.params.id
+  const title = route.meta.title
+  return id ? `${title} #${id}` : title
+})
 </script>
 
 <template>
@@ -13,17 +17,9 @@ const pathItems = computed(() => route.path.split('/'))
     horizontal
     justify="space-between"
     align="center"
-    style="padding: 0 16px"
+    style="padding-right: 16px"
   >
-  <a-page-header
-    :title="`Пользователь ID ${id}`"
-    @back="() => $router.back()"
-  />
-    <a-breadcrumb>
-      <a-breadcrumb-item v-for="pathItem in pathItems">
-        {{ pathItem }}
-      </a-breadcrumb-item>
-    </a-breadcrumb>
+    <a-page-header :title="pageTitle" @back="() => $router.back()" />
 
     <!-- Пользователь -->
     <user-dropdown />

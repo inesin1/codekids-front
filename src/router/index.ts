@@ -18,6 +18,7 @@ const routes = [
     path: '/',
     component: MainPage,
     meta: {
+      title: 'Главная',
       requiresAuth: true,
     },
   },
@@ -26,6 +27,7 @@ const routes = [
     path: '/lessons',
     component: LessonsPage,
     meta: {
+      title: 'Уроки',
       requiresAuth: true,
     },
   },
@@ -34,6 +36,7 @@ const routes = [
     path: '/students',
     component: StudentsPage,
     meta: {
+      title: 'Ученики',
       requiresAuth: true,
     },
   },
@@ -42,6 +45,7 @@ const routes = [
     path: '/teachers',
     component: TeachersPage,
     meta: {
+      title: 'Преподаватели',
       requiresAuth: true,
     },
   },
@@ -50,6 +54,7 @@ const routes = [
     path: '/courses',
     component: CoursesPage,
     meta: {
+      title: 'Курсы',
       requiresAuth: true,
     },
   },
@@ -58,6 +63,7 @@ const routes = [
     path: '/users',
     component: UsersPage,
     meta: {
+      title: 'Пользователи',
       requiresAuth: true,
     },
   },
@@ -66,6 +72,7 @@ const routes = [
     path: '/users/:id',
     component: UserIdPage,
     meta: {
+      title: 'Пользователь',
       requiresAuth: true,
     },
   },
@@ -74,6 +81,7 @@ const routes = [
     path: '/analytics/lessons',
     component: LessonsAnalyticsPage,
     meta: {
+      title: 'Отчет об уроках',
       requiresAuth: true,
     },
   },

@@ -3,25 +3,44 @@ import { columns } from './columns'
 import { useApi } from '../../services/api'
 import { Lesson } from '../../types/lesson'
 import { LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
-import { ref } from 'vue'
+import { ref, computed, reactive } from 'vue'
 
 // Data
 const { getAll } = useApi<Lesson>('lesson')
-const lessons = ref<Lesson[]>(undefined)
+const lessons = ref<Lesson[]>(null)
 const isLoading = ref<boolean>(false)
+
+const filter = reactive({
+  status: null,
+})
 
 // Methods
 const generateReport = async () => {
   isLoading.value = true
   lessons.value = await getAll({ with: ['teacher', 'student', 'course'] })
+  lessons.value.filter((lesson) =>
+    filter.status ? lesson.status === filter.status : true
+  )
   isLoading.value = false
 }
 </script>
 
 <template>
   <a-space direction="vertical">
-    <a-space>
+    <a-space direction="vertical">
       <a-button type="primary" @click="generateReport"> Сформировать </a-button>
+      <a-form>
+        <a-form-item label="Статус проведения">
+          <a-select v-model:value="filter.status" placeholder="Не выбран">
+            <a-select-option
+              v-for="lessonStatusType in LessonStatusTypes"
+              :value="lessonStatusType"
+            >
+              {{ lessonStatusType }}
+            </a-select-option>
+          </a-select>
+        </a-form-item>
+      </a-form>
     </a-space>
     <a-table
       style="border: 1px solid #f0f0f0; border-bottom: none; border-radius: 2px"

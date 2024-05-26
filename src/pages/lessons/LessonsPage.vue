@@ -5,6 +5,7 @@ import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
 import CreateLessonModal from './components/CreateLessonModal.vue'
 import { useApi } from '../../services/api'
 import { createNotification } from '../../helpers/notifications'
+import { formatDate } from '../../helpers/format-date'
 
 // Data
 const search = ref('')
@@ -54,7 +55,7 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
           {{ record.id }}
         </template>
         <template v-if="column.key === 'datetime'">
-          {{ record.datetime }}
+          {{ formatDate(record.datetime) }}
         </template>
         <template v-if="column.key === 'student'">
           <a-typography-link>

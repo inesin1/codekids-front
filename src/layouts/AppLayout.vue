@@ -13,7 +13,7 @@ const collapsed = ref<boolean>(false)
       <app-aside :collapsed="collapsed" />
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
+      <a-layout-header style="background: #fff; padding: 0; height: auto">
         <app-header />
       </a-layout-header>
       <a-layout-content style="padding: 16px">
