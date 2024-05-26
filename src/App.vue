@@ -1,35 +1,18 @@
 <script setup lang="ts">
 import ruRU from 'ant-design-vue/es/locale/ru_RU'
-import { ref } from 'vue'
-import AppAside from './layouts/AppAside.vue'
-import AppHeader from './layouts/AppHeader.vue'
 import { useUserStore } from './stores/user.store'
+import { storeToRefs } from 'pinia'
+import AppLayout from './layouts/AppLayout.vue'
+import AppNotAuthenticatedLayout from './layouts/AppNotAuthenticatedLayout.vue'
 
 // Data
-const { currentUser } = useUserStore()
-const collapsed = ref<boolean>(false)
+const { isAuthenticated } = storeToRefs(useUserStore())
 </script>
 
 <template>
   <a-config-provider :locale="ruRU">
-    <a-layout style="min-height: 100vh">
-      <a-layout-sider
-        v-if="currentUser"
-        v-model:collapsed="collapsed"
-        collapsible
-        :width="260"
-      >
-        <app-aside :collapsed="collapsed" />
-      </a-layout-sider>
-      <a-layout>
-        <a-layout-header style="background: #fff; padding: 0">
-          <app-header />
-        </a-layout-header>
-        <a-layout-content style="margin: 0 16px">
-          <router-view style="padding: 16px" />
-        </a-layout-content>
-      </a-layout>
-    </a-layout>
+    <app-layout v-if="isAuthenticated" />
+    <app-not-authenticated-layout v-else />
   </a-config-provider>
 </template>
 

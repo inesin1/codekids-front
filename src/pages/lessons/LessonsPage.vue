@@ -12,8 +12,8 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
 const createLessonModalVisible = ref(false)
 
 // Получаем данные с бэка
-const { getAll, create } = useApi<Lesson>('lesson')
-const { data, isLoading } = getAll({
+const { getAllReactive, create } = useApi<Lesson>('lesson')
+const { data, isLoading } = getAllReactive({
   search: search,
   with: ['teacher', 'student', 'course'],
 })

@@ -11,8 +11,8 @@ const search = ref('')
 const createCourseModalVisible = ref(false)
 
 // Получаем данные с бэка
-const { getAll, create } = useApi<Course>('course')
-const { data, isLoading } = getAll({ search: search.value })
+const { getAllReactive, create } = useApi<Course>('course')
+const { data, isLoading } = getAllReactive({ search: search.value })
 
 // Methods
 const saveCourse = async (course: Partial<Course>) => {

@@ -1,27 +1,26 @@
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { columns } from './columns'
-import CreateTeacherModal from './components/CreateTeacherModal.vue'
-import { Teacher } from '../../types/teacher'
 import { useApi } from '../../services/api'
 import { createNotification } from '../../helpers/notifications'
+import { User } from '../../types/user'
+import CreateUserModal from './components/create-user-modal/CreateUserModal.vue'
 
 // Data
 const search = ref('')
-const createTeacherModalVisible = ref(false)
+const createUserModalVisible = ref(false)
 
 // Получаем данные с бэка
-const { getAllReactive, create } = useApi<Teacher>('teacher')
+const { getAllReactive, create } = useApi<User>('user')
 const { data, isLoading } = getAllReactive({
-  search: search,
-  with: ['courses'],
+  search,
 })
 
 // Methods
-const saveTeacher = async (teacher: Partial<Teacher>) => {
+const save = async (user: Partial<User>) => {
   try {
-    await create(teacher)
-    createNotification('success', 'Преподаватель добавлен')
+    await create(user)
+    createNotification('success', 'Пользователь добавлен')
   } catch (e) {
     createNotification('error', e)
   }
@@ -31,7 +30,7 @@ const saveTeacher = async (teacher: Partial<Teacher>) => {
 <template>
   <a-space direction="vertical">
     <a-space>
-      <a-button type="primary" @click="createTeacherModalVisible = true">
+      <a-button type="primary" @click="createUserModalVisible = true">
         + Добавить
       </a-button>
       <a-input-search v-model:value="search" placeholder="Поиск..." />
@@ -54,16 +53,19 @@ const saveTeacher = async (teacher: Partial<Teacher>) => {
         <template v-if="column.key === 'name'">
           {{ record.name }}
         </template>
-        <template v-if="column.key === 'courses'">
-          <a-tag v-for="course in record.courses" :key="course.id">
-            {{ course.name }}
+        <template v-if="column.key === 'username'">
+          {{ record.username }}
+        </template>
+        <template v-if="column.key === 'role'">
+          {{ record.role }}
+        </template>
+        <template v-if="column.key === 'is_active'">
+          <a-tag :color="record.is_active ? 'green' : 'red'">
+            {{ record.is_active ? 'Активен' : 'Не активен' }}
           </a-tag>
         </template>
       </template>
     </a-table>
   </a-space>
-  <create-teacher-modal
-    v-model:visible="createTeacherModalVisible"
-    @save="saveTeacher"
-  />
+  <create-user-modal v-model:visible="createUserModalVisible" @save="save" />
 </template>

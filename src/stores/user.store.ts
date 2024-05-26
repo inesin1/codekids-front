@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { User } from '../types/user'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthApi } from '../services/auth-api'
 import { createNotification } from '../helpers/notifications'
 import { jwtDecode } from 'jwt-decode'
@@ -11,6 +11,7 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const currentUser = ref<User | null>(null)
   const accessToken = ref<string | null>(null)
+  const isAuthenticated = computed(() => !!accessToken.value)
 
   async function login(authData: AuthData) {
     const { login } = useAuthApi()
@@ -43,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
 
   return {
     currentUser,
+    isAuthenticated,
     accessToken,
     login,
     logout,

@@ -11,7 +11,7 @@
     long - длинный (8)
 */
 
-import { FormLayout } from '@/types/form-layout.interface'
+import { FormLayout } from '../types/form-layout.interface'
 
 type FormLayoutKeys =
   | 'none'

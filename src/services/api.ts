@@ -1,15 +1,27 @@
 import { QueryOptions } from '../types/query-options'
-import { useQuery, useQueryClient } from 'vue-query'
+import { UseQueryReturnType, useQuery, useQueryClient } from 'vue-query'
 import { isRef } from 'vue'
 import { useAxiosInstance } from './instance'
 
-type ApiType = 'lesson' | 'student' | 'teacher' | 'course'
+type ApiType = 'lesson' | 'student' | 'teacher' | 'course' | 'user'
 
-export const useApi = <EntityType>(type: ApiType) => {
+export const useApi = <EntityType = any>(type: ApiType) => {
   const { instance } = useAxiosInstance()
   const queryClient = useQueryClient()
 
-  const getAll = (options?: QueryOptions) =>
+  const getAll = async (options?: QueryOptions) => {
+    const { data } = await instance.get<EntityType[]>(`${type}`, {
+      params: {
+        ...options,
+        search: isRef(options?.search)
+          ? options?.search?.value
+          : options?.search,
+      },
+    })
+    return data
+  }
+
+  const getAllReactive = (options?: QueryOptions) =>
     useQuery(
       [type, options],
       async () => {
@@ -26,7 +38,17 @@ export const useApi = <EntityType>(type: ApiType) => {
       { initialData: [] as EntityType[] }
     )
 
-  const getOne = (id: number, options?: QueryOptions) =>
+  const getOne = async (id: number, options?: QueryOptions) => {
+    const { data } = await instance.get<EntityType>(`${type}/${id}`, {
+      params: options,
+    })
+    return data
+  }
+
+  const getOneReactive = (
+    id: number,
+    options?: QueryOptions
+  ): UseQueryReturnType<EntityType, unknown> =>
     useQuery([type, id], async () => {
       const { data } = await instance.get<EntityType>(`${type}/${id}`, {
         params: options,
@@ -59,7 +81,9 @@ export const useApi = <EntityType>(type: ApiType) => {
 
   return {
     getAll,
+    getAllReactive,
     getOne,
+    getOneReactive,
     create,
     update,
     updateArray,

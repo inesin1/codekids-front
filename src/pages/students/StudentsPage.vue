@@ -11,8 +11,8 @@ const search = ref('')
 const createStudentModalVisible = ref(false)
 
 // Получаем данные с бэка
-const { getAll, create } = useApi<Student>('student')
-const { data, isLoading } = getAll({
+const { getAllReactive, create } = useApi<Student>('student')
+const { data, isLoading } = getAllReactive({
   search: search,
   with: ['course', 'teacher'],
 })

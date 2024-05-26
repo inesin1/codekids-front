@@ -16,7 +16,7 @@ const formState = ref<AuthData>({
 const onFinish = async (values: AuthData) => {
   const success = await login(values)
   if (success) {
-    await router.push('/lessons')
+    await router.push('/')
   }
 }
 
