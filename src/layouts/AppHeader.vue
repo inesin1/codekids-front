@@ -15,6 +15,10 @@ const pathItems = computed(() => route.path.split('/'))
     align="center"
     style="padding: 0 16px"
   >
+  <a-page-header
+    :title="`Пользователь ID ${id}`"
+    @back="() => $router.back()"
+  />
     <a-breadcrumb>
       <a-breadcrumb-item v-for="pathItem in pathItems">
         {{ pathItem }}

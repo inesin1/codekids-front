@@ -9,7 +9,8 @@ import ProfilePage from '../pages/profile/ProfilePage.vue'
 import StudentsPage from '../pages/students/StudentsPage.vue'
 import CoursesPage from '../pages/courses/CoursesPage.vue'
 import { useUserStore } from '../stores/user.store'
-import UsersPage from '../pages/users/UsersPage.vue'
+import UsersPage from '@/pages/users/UsersPage.vue'
+import UserIdPage from '@/pages/users/UserIdPage.vue'
 
 const routes = [
   {
@@ -56,6 +57,14 @@ const routes = [
     name: 'Users',
     path: '/users',
     component: UsersPage,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    name: 'UserId',
+    path: '/users/:id',
+    component: UserIdPage,
     meta: {
       requiresAuth: true,
     },

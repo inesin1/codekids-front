@@ -5,8 +5,10 @@ import { useApi } from '../../services/api'
 import { createNotification } from '../../helpers/notifications'
 import { User } from '../../types/user'
 import CreateUserModal from './components/create-user-modal/CreateUserModal.vue'
+import { useRouter } from 'vue-router'
 
 // Data
+const router = useRouter()
 const search = ref('')
 const createUserModalVisible = ref(false)
 
@@ -15,7 +17,13 @@ const { getAllReactive, create } = useApi<User>('user')
 const { data, isLoading } = getAllReactive({
   search,
 })
-
+const customRow = (record) => {
+  return {
+    onClick: () => {
+      router.push({ name: 'UserId', params: { id: record.id } })
+    },
+  }
+}
 // Methods
 const save = async (user: Partial<User>) => {
   try {
@@ -44,7 +52,8 @@ const save = async (user: Partial<User>) => {
       "
       :columns="columns"
       :data-source="data"
-      :loading="isLoading"
+      :loading="!data"
+      :custom-row="customRow"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
