@@ -17,8 +17,8 @@ const formState = reactive<
 >({})
 
 // Api
-const { getAll: getTeachers } = useApi<Teacher>('teacher')
-const { getAll: getCourses } = useApi<Course>('course')
+const { getAllReactive: getTeachers } = useApi<Teacher>('teacher')
+const { getAllReactive: getCourses } = useApi<Course>('course')
 const { data: teachers } = getTeachers()
 const { data: courses } = getCourses()
 

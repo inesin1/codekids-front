@@ -11,7 +11,7 @@ const emit = defineEmits<{
 const visible = defineModel<boolean>('visible')
 const formState = reactive<Partial<Teacher> & { courses_ids?: number[] }>({})
 
-const { getAll: getCourses } = useApi<Course>('course')
+const { getAllReactive: getCourses } = useApi<Course>('course')
 const { data: courses } = getCourses()
 </script>
 

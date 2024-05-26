@@ -19,9 +19,9 @@ const formState = reactive<
   }
 >({})
 
-const { getAll: getStudents } = useApi<Student>('student')
-const { getAll: getTeachers } = useApi<Teacher>('teacher')
-const { getAll: getCourses } = useApi<Course>('course')
+const { getAllReactive: getStudents } = useApi<Student>('student')
+const { getAllReactive: getTeachers } = useApi<Teacher>('teacher')
+const { getAllReactive: getCourses } = useApi<Course>('course')
 const { data: students } = getStudents()
 const { data: teachers } = getTeachers()
 const { data: courses } = getCourses()
