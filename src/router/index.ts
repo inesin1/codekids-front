@@ -11,6 +11,7 @@ import CoursesPage from '../pages/courses/CoursesPage.vue'
 import { useUserStore } from '../stores/user.store'
 import UsersPage from '@/pages/users/UsersPage.vue'
 import UserIdPage from '@/pages/users/UserIdPage.vue'
+import LessonIdPage from '@/pages/lessons/LessonIdPage.vue'
 
 const routes = [
   {
@@ -28,6 +29,15 @@ const routes = [
     component: LessonsPage,
     meta: {
       title: 'Уроки',
+      requiresAuth: true,
+    },
+  },
+  {
+    name: 'LessonId',
+    path: '/lessons/:id',
+    component: LessonIdPage,
+    meta: {
+      title: 'Урок',
       requiresAuth: true,
     },
   },

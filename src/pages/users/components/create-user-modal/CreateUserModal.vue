@@ -16,6 +16,7 @@ const formRef = ref<FormInstance>()
 const onOk = async () => {
   await formRef.value.validate()
   emit('save', formState)
+  visible.value = false
 }
 </script>
 

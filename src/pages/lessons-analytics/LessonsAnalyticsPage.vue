@@ -18,7 +18,7 @@ const filter = reactive({
 const generateReport = async () => {
   isLoading.value = true
   lessons.value = await getAll({ with: ['teacher', 'student', 'course'] })
-  lessons.value.filter((lesson) =>
+  lessons.value = lessons.value.filter((lesson) =>
     filter.status ? lesson.status === filter.status : true
   )
   isLoading.value = false
@@ -102,7 +102,8 @@ const generateReport = async () => {
           <a-tag
             v-else-if="record.pay_status === PayStatusTypes.NotPaid"
             color="red"
-            >{{ record.pay_status }}
+          >
+            {{ record.pay_status }}
           </a-tag>
         </template>
       </template>

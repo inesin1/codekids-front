@@ -1,23 +1,20 @@
 <script lang="ts" setup>
-import { reactive } from 'vue'
-import { Lesson } from '../../../types/lesson'
-import { Course } from '../../../types/course'
-import { useApi } from '../../../services/api'
-import { Student } from '../../../types/student'
-import { Teacher } from '../../../types/teacher'
+import { reactive, ref } from 'vue'
+import { useApi } from '../../../../services/api'
+import { Course } from '../../../../types/course'
+import { Lesson } from '../../../../types/lesson'
+import { Student } from '../../../../types/student'
+import { Teacher } from '../../../../types/teacher'
+import { rules } from './validation-rules'
+import { FormInstance } from 'ant-design-vue'
 
 const emit = defineEmits<{
   save: [lesson: Partial<Lesson>]
 }>()
 
 const visible = defineModel<boolean>('visible')
-const formState = reactive<
-  Partial<Lesson> & {
-    teacher_id?: number
-    student_id?: number
-    course_id?: number
-  }
->({})
+const formState = reactive<Partial<Lesson>>({})
+const formRef = ref<FormInstance>()
 
 const { getAllReactive: getStudents } = useApi<Student>('student')
 const { getAllReactive: getTeachers } = useApi<Teacher>('teacher')
@@ -27,7 +24,8 @@ const { data: teachers } = getTeachers()
 const { data: courses } = getCourses()
 
 // Methods
-const onOk = () => {
+const onOk = async () => {
+  await formRef.value.validate()
   emit('save', formState)
   visible.value = false
 }
@@ -40,13 +38,12 @@ const onOk = () => {
     okText="Добавить"
     @ok="onOk"
     @cancel="visible = false"
-    :width="800"
   >
-    <a-form>
-      <a-form-item label="Дата и время">
+    <a-form ref="formRef" :model="formState" :rules="rules" layout="vertical">
+      <a-form-item label="Дата и время" name="datetime">
         <a-date-picker show-time v-model:value="formState.datetime" />
       </a-form-item>
-      <a-form-item label="Ученик">
+      <a-form-item label="Ученик" name="student_id">
         <a-select
           v-model:value="formState.student_id"
           placeholder="Выбрать..."
@@ -54,7 +51,7 @@ const onOk = () => {
           :field-names="{ label: 'name', value: 'id' }"
         />
       </a-form-item>
-      <a-form-item label="Преподаватель">
+      <a-form-item label="Преподаватель" name="teacher_id">
         <a-select
           v-model:value="formState.teacher_id"
           placeholder="Выбрать..."
@@ -62,7 +59,7 @@ const onOk = () => {
           :field-names="{ label: 'name', value: 'id' }"
         />
       </a-form-item>
-      <a-form-item label="Курс">
+      <a-form-item label="Курс" name="course_id">
         <a-select
           v-model:value="formState.course_id"
           placeholder="Выбрать..."

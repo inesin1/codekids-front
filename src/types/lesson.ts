@@ -19,8 +19,17 @@ export interface Lesson {
   id: number
   datetime: Dayjs
   student: Student
+  student_id: number
   teacher: Teacher
+  teacher_id: number
   course: Course
+  course_id: number
   status: LessonStatusTypes
   pay_status: PayStatusTypes
+  comment?: string
+}
+
+export type ChangeLessonStatusFormState = {
+  status: LessonStatusTypes
+  comment: string
 }

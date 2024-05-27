@@ -1,16 +1,33 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { columns } from './columns'
 import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
-import CreateLessonModal from './components/CreateLessonModal.vue'
+import CreateLessonModal from './components/create-lesson-modal/CreateLessonModal.vue'
 import { useApi } from '../../services/api'
 import { createNotification } from '../../helpers/notifications'
 import { formatDate } from '../../helpers/format-date'
+import { useRouter } from 'vue-router'
+import { Dayjs } from 'dayjs'
+
+type Filter = {
+  datetime: [Dayjs | null, Dayjs | null]
+}
 
 // Data
+const router = useRouter()
 const search = ref('')
+const filter = reactive<Filter>({
+  datetime: [null, null],
+})
 const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
 const createLessonModalVisible = ref(false)
+const customRow = (record) => {
+  return {
+    onClick: () => {
+      router.push({ name: 'LessonId', params: { id: record.id } })
+    },
+  }
+}
 
 // Получаем данные с бэка
 const { getAllReactive, create } = useApi<Lesson>('lesson')
@@ -36,7 +53,7 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       <a-button type="primary" @click="createLessonModalVisible = true">
         + Добавить
       </a-button>
-      <a-range-picker :format="dateFormatList" />
+      <a-range-picker v-model:value="filter.datetime" :format="dateFormatList" />
       <a-input-search v-model:value="search" placeholder="Поиск..." />
     </a-space>
     <a-table
@@ -49,6 +66,7 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       :columns="columns"
       :data-source="data"
       :loading="isLoading"
+      :custom-row="customRow"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
@@ -103,7 +121,8 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
           <a-tag
             v-else-if="record.pay_status === PayStatusTypes.NotPaid"
             color="red"
-            >{{ record.pay_status }}
+          >
+            {{ record.pay_status }}
           </a-tag>
         </template>
       </template>

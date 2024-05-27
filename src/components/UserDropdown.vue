@@ -3,8 +3,7 @@ import { UserOutlined, DownOutlined } from '@ant-design/icons-vue'
 import { useUserStore } from '../stores/user.store'
 
 const userStore = useUserStore()
-const currentUserId = 1
-const profileLink = { name: 'Profile', params: { id: currentUserId } }
+const profileLink = { name: 'UserId', params: { id: userStore.currentUser.id } }
 </script>
 
 <template>

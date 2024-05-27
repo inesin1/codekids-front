@@ -2,7 +2,7 @@ import { ColumnType } from 'ant-design-vue/es/table'
 import type { Lesson } from '../../types/lesson'
 
 interface LessonsColumnType extends ColumnType {
-  dataIndex: keyof Lesson
+  dataIndex?: keyof Lesson
 }
 
 export const columns: LessonsColumnType[] = [
