@@ -14,7 +14,7 @@ const createUserModalVisible = ref(false)
 
 // Получаем данные с бэка
 const { getAllReactive, create } = useApi<User>('user')
-const { data, isLoading } = getAllReactive({
+const { data, isFetching } = getAllReactive({
   search,
 })
 const customRow = (record) => {
@@ -52,7 +52,7 @@ const save = async (user: Partial<User>) => {
       "
       :columns="columns"
       :data-source="data"
-      :loading="!data"
+      :loading="isFetching"
       :custom-row="customRow"
     >
       <template #bodyCell="{ column, record, index }">

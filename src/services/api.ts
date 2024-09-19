@@ -1,5 +1,5 @@
 import { QueryOptions } from '../types/query-options'
-import { UseQueryReturnType, useQuery, useQueryClient } from 'vue-query'
+import { useQuery, useQueryClient } from '@tanstack/vue-query'
 import { isRef } from 'vue'
 import { useAxiosInstance } from './instance'
 
@@ -22,9 +22,9 @@ export const useApi = <EntityType = any>(type: ApiType) => {
   }
 
   const getAllReactive = (options?: QueryOptions) =>
-    useQuery(
-      [type, options],
-      async () => {
+    useQuery({
+      queryKey: [type, options],
+      queryFn: async () => {
         const { data } = await instance.get<EntityType[]>(`${type}`, {
           params: {
             ...options,
@@ -35,8 +35,8 @@ export const useApi = <EntityType = any>(type: ApiType) => {
         })
         return data
       },
-      { initialData: [] as EntityType[] }
-    )
+      initialData: [],
+    })
 
   const getOne = async (id: number, options?: QueryOptions) => {
     const { data } = await instance.get<EntityType>(`${type}/${id}`, {
@@ -45,39 +45,41 @@ export const useApi = <EntityType = any>(type: ApiType) => {
     return data
   }
 
-  const getOneReactive = (
-    id: number,
-    options?: QueryOptions
-  ): UseQueryReturnType<EntityType, unknown> =>
-    useQuery([type, id], async () => {
-      const { data } = await instance.get<EntityType>(`${type}/${id}`, {
-        params: options,
-      })
-      return data
+  const getOneReactive = (id: number, options?: QueryOptions) =>
+    useQuery({
+      queryKey: [type, id, options],
+      queryFn: async () => {
+        const { data } = await instance.get<EntityType>(`${type}/${id}`, {
+          params: options,
+        })
+        return data
+      },
     })
 
   const create = async (body: Partial<EntityType>) =>
     instance.post<EntityType>(`${type}`, body).then(async (res) => {
-      await queryClient.invalidateQueries([type])
+      await queryClient.invalidateQueries({ queryKey: [type] })
       return res.data
     })
 
   const update = async (id: number, body: Partial<EntityType>) =>
     instance.patch<EntityType>(`${type}/${id}`, body).then(async (res) => {
-      await queryClient.invalidateQueries([type])
+      await queryClient.invalidateQueries({ queryKey: [type] })
       return res.data
     })
 
   const updateArray = async (body: Partial<EntityType>[]) =>
     instance.patch<EntityType[]>(`${type}/array`, body).then(async (res) => {
-      await queryClient.invalidateQueries([type])
+      await queryClient.invalidateQueries({ queryKey: [type] })
       return res.data
     })
 
   const remove = async (id: number) =>
     instance
       .delete(`${type}/${id}`)
-      .then(async () => await queryClient.invalidateQueries([type]))
+      .then(
+        async () => await queryClient.invalidateQueries({ queryKey: [type] })
+      )
 
   return {
     getAll,

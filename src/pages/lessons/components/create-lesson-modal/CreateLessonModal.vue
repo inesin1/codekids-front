@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useApi } from '../../../../services/api'
 import { Course } from '../../../../types/course'
 import { Lesson } from '../../../../types/lesson'
@@ -19,7 +19,7 @@ const formRef = ref<FormInstance>()
 const { getAllReactive: getStudents } = useApi<Student>('student')
 const { getAllReactive: getTeachers } = useApi<Teacher>('teacher')
 const { getAllReactive: getCourses } = useApi<Course>('course')
-const { data: students } = getStudents()
+const { data: students } = getStudents({ with: ['teacher', 'course'] })
 const { data: teachers } = getTeachers()
 const { data: courses } = getCourses()
 
@@ -29,6 +29,16 @@ const onOk = async () => {
   emit('save', formState)
   visible.value = false
 }
+
+// При выборе ученика подставляем выбор преподавателя и курса
+watch(
+  () => formState.student_id,
+  (newValue) => {
+    const student = students.value.find((s) => s.id === newValue)
+    formState.teacher_id = student.teacher.id
+    formState.course_id = student.course.id
+  }
+)
 </script>
 
 <template>

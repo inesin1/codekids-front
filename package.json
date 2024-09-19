@@ -18,7 +18,7 @@
     "lodash": "^4.17.21",
     "pinia": "^2.1.7",
     "vue": "^3.4.21",
-    "vue-query": "^1.26.0",
+    "@tanstack/vue-query": "5.40.0",
     "vue-router": "^4.3.2",
     "yarn": "^1.22.22"
   },

@@ -17,6 +17,7 @@ import { createNotification } from '../../helpers/notifications'
 import { useUserStore } from '../../stores/user.store'
 import { RoleTypes } from '@/types/user'
 import ChangeLessonStatusModal from './components/change-lesson-status-modal/ChangeLessonStatusModal.vue'
+import { formatDate } from '@/helpers/format-date'
 
 // Data
 const route = useRoute()
@@ -117,7 +118,7 @@ onMounted(async () => {
         </a-button>
       </a-space>
       <a-button
-        v-if="lesson && lesson.status === LessonStatusTypes.Assigned"
+        :disabled="!lesson || lesson.status !== LessonStatusTypes.Assigned"
         @click="isChangeStatusModalVisible = true"
       >
         Изменить статус
@@ -128,8 +129,46 @@ onMounted(async () => {
 
     <a-skeleton v-if="!lesson" active />
     <div v-else>
+      <a-descriptions v-if="!isEdit" bordered :column="1">
+        <a-descriptions-item label="Дата и время">
+          {{ formatDate(lesson.datetime) }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Ученик">
+          {{ lesson.student.name }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Преподаватель">
+          {{ lesson.teacher.name }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Курс">
+          {{ lesson.course.name }}
+        </a-descriptions-item>
+        <a-descriptions-item label="Статус проведения">
+          <a-tag
+            :color="
+              lesson.status === LessonStatusTypes.Canceled
+                ? 'red'
+                : lesson.status === LessonStatusTypes.Completed
+                  ? 'green'
+                  : 'yellow'
+            "
+          >
+            {{ lesson.status }}
+          </a-tag>
+        </a-descriptions-item>
+        <a-descriptions-item label="Статус оплаты">
+          <a-tag
+            :color="lesson.pay_status === PayStatusTypes.Paid ? 'green' : 'red'"
+          >
+            {{ lesson.pay_status }}
+          </a-tag>
+        </a-descriptions-item>
+        <a-descriptions-item label="Комментарий">
+          {{ lesson.comment }}
+        </a-descriptions-item>
+      </a-descriptions>
+
       <a-form
-        :disabled="!isEdit"
+        v-else
         ref="formRef"
         :model="lesson"
         layout="vertical"

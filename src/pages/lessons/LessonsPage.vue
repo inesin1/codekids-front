@@ -31,7 +31,7 @@ const customRow = (record) => {
 
 // Получаем данные с бэка
 const { getAllReactive, create } = useApi<Lesson>('lesson')
-const { data, isLoading } = getAllReactive({
+const { data, isFetching } = getAllReactive({
   search: search,
   with: ['teacher', 'student', 'course'],
 })
@@ -53,7 +53,10 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       <a-button type="primary" @click="createLessonModalVisible = true">
         + Добавить
       </a-button>
-      <a-range-picker v-model:value="filter.datetime" :format="dateFormatList" />
+      <a-range-picker
+        v-model:value="filter.datetime"
+        :format="dateFormatList"
+      />
       <a-input-search v-model:value="search" placeholder="Поиск..." />
     </a-space>
     <a-table
@@ -65,7 +68,7 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       "
       :columns="columns"
       :data-source="data"
-      :loading="isLoading"
+      :loading="isFetching"
       :custom-row="customRow"
     >
       <template #bodyCell="{ column, record, index }">

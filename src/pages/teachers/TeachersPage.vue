@@ -12,7 +12,7 @@ const createTeacherModalVisible = ref(false)
 
 // Получаем данные с бэка
 const { getAllReactive, create } = useApi<Teacher>('teacher')
-const { data, isLoading } = getAllReactive({
+const { data, isFetching } = getAllReactive({
   search: search,
   with: ['courses'],
 })
@@ -45,7 +45,7 @@ const saveTeacher = async (teacher: Partial<Teacher>) => {
       "
       :columns="columns"
       :data-source="data"
-      :loading="isLoading"
+      :loading="isFetching"
     >
       <template #bodyCell="{ column, record, index }">
         <template v-if="column.key === 'id'">
