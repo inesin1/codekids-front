@@ -1,5 +1,5 @@
 # Node
-FROM node:alpine as build
+FROM node:alpine AS build
 
 COPY package.json package.json
 RUN yarn
