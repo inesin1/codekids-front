@@ -45,7 +45,7 @@ const { data: courses } = getCourses()
 // Methods
 const loadLesson = async () => {
   lesson.value = await getOne(id, { with: ['student', 'teacher', 'course'] })
-  lesson.value.datetime = dayjs(lesson.value.datetime)
+  //lesson.value.datetime = dayjs(lesson.value.datetime)
 }
 const updateLesson = async (
   changeLessonStatusFormState?: ChangeLessonStatusFormState

@@ -1,4 +1,4 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs';
 
-export const formatDate = (date: Dayjs) =>
-  dayjs(date).format('DD.MM.YYYY HH:mm')
+export const formatDate = (date: Dayjs | Date | string) =>
+  dayjs(date).format('DD.MM.YYYY HH:mm');
