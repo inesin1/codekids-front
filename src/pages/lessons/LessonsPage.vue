@@ -1,54 +1,57 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
-import { columns } from './columns'
-import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson'
-import CreateLessonModal from './components/create-lesson-modal/CreateLessonModal.vue'
-import { useApi } from '../../services/api'
-import { createNotification } from '../../helpers/notifications'
-import { formatDate } from '../../helpers/format-date'
-import { useRouter } from 'vue-router'
-import { Dayjs } from 'dayjs'
+import { ref, reactive } from 'vue';
+import { columns } from './columns';
+import { Lesson, LessonStatusTypes, PayStatusTypes } from '../../types/lesson';
+import CreateLessonModal from './components/create-lesson-modal/CreateLessonModal.vue';
+import { useApi } from '../../services/api';
+import { createNotification } from '../../helpers/notifications';
+import { formatDate } from '../../helpers/format-date';
+import { useRouter } from 'vue-router';
+import { Dayjs } from 'dayjs';
+import LessonsCalendar from './components/lessons-calendar/LessonsCalendar.vue';
 
 type Filter = {
-  datetime: [Dayjs | null, Dayjs | null]
-}
+  datetime: [Dayjs | null, Dayjs | null];
+};
 
 // Data
-const router = useRouter()
-const search = ref('')
+const router = useRouter();
+const search = ref('');
 const filter = reactive<Filter>({
   datetime: [null, null],
-})
-const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY']
-const createLessonModalVisible = ref(false)
+});
+const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
+const createLessonModalVisible = ref(false);
 const customRow = (record) => {
   return {
     onClick: () => {
-      router.push({ name: 'LessonId', params: { id: record.id } })
+      router.push({ name: 'LessonId', params: { id: record.id } });
     },
-  }
-}
+  };
+};
+const viewModes = reactive(['Календарь', 'Список']);
+const selectedViewMode = ref(viewModes[0]);
 
 // Получаем данные с бэка
-const { getAllReactive, create } = useApi<Lesson>('lesson')
+const { getAllReactive, create } = useApi<Lesson>('lesson');
 const { data, isFetching } = getAllReactive({
   search: search,
   with: ['teacher', 'student', 'course'],
-})
+});
 
 // Methods
 const saveLesson = async (lesson: Partial<Lesson>) => {
   try {
-    await create(lesson)
-    createNotification('success', 'Урок добавлен')
+    await create(lesson);
+    createNotification('success', 'Урок добавлен');
   } catch (e) {
-    createNotification('error', e)
+    createNotification('error', e);
   }
-}
+};
 </script>
 
 <template>
-  <a-space direction="vertical">
+  <a-flex vertical gap="16">
     <a-space>
       <a-button type="primary" @click="createLessonModalVisible = true">
         + Добавить
@@ -58,8 +61,17 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
         :format="dateFormatList"
       />
       <a-input-search v-model:value="search" placeholder="Поиск..." />
+
+      <a-segmented v-model:value="selectedViewMode" :options="viewModes" />
     </a-space>
+
+    <lessons-calendar
+      v-if="selectedViewMode === viewModes[0]"
+      :lessons="data"
+    />
+
     <a-table
+      v-if="selectedViewMode === viewModes[1]"
       style="
         border: 1px solid #f0f0f0;
         border-bottom: none;
@@ -130,9 +142,11 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
         </template>
       </template>
     </a-table>
-  </a-space>
+  </a-flex>
   <create-lesson-modal
     v-model:visible="createLessonModalVisible"
     @save="saveLesson"
   />
 </template>
+
+<style scoped></style>
