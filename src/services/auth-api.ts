@@ -1,11 +1,11 @@
-import { AuthData, Token } from '../types/auth'
+import { AuthData, SignInReturnType } from '../types/auth'
 import { useAxiosInstance } from './instance'
 
 export const useAuthApi = () => {
   const { instance } = useAxiosInstance()
 
   const login = (authData: AuthData) =>
-    instance.post<Token>('auth/login', authData)
+    instance.post<SignInReturnType>('auth/login', authData)
 
   return { login }
 }

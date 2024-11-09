@@ -1,8 +1,9 @@
 export interface AuthData {
-  username: string
-  password: string
+  username: string;
+  password: string;
 }
 
-export interface Token {
-  access_token: string
-}
+export type SignInReturnType = {
+  success: boolean;
+  access_token?: string;
+};

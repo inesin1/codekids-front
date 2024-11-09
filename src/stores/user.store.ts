@@ -1,45 +1,51 @@
-import { defineStore } from 'pinia'
-import { User } from '../types/user'
-import { computed, ref } from 'vue'
-import { useAuthApi } from '../services/auth-api'
-import { createNotification } from '../helpers/notifications'
-import { jwtDecode } from 'jwt-decode'
-import { AuthData } from '../types/auth'
-import { useRouter } from 'vue-router'
+import { defineStore } from 'pinia';
+import { User } from '../types/user';
+import { computed, ref } from 'vue';
+import { useAuthApi } from '../services/auth-api';
+import { createNotification } from '../helpers/notifications';
+import { jwtDecode } from 'jwt-decode';
+import { AuthData } from '../types/auth';
+import { useRouter } from 'vue-router';
 
 export const useUserStore = defineStore('user', () => {
-  const router = useRouter()
-  const currentUser = ref<User | null>(null)
-  const accessToken = ref<string | null>(null)
-  const isAuthenticated = computed(() => !!accessToken.value)
+  const router = useRouter();
+  const currentUser = ref<User | null>(null);
+  const accessToken = ref<string | null>(null);
+  const isAuthenticated = computed(() => !!accessToken.value);
 
   async function login(authData: AuthData) {
-    const { login } = useAuthApi()
     try {
-      const { data, status, statusText } = await login(authData)
+      const { login } = useAuthApi();
+      const { data, status, statusText } = await login(authData);
 
       if (status !== 200) {
-        throw new Error(statusText)
+        throw new Error(statusText);
       }
 
-      accessToken.value = data.access_token
+      if (!data.success) {
+        createNotification('error', 'Неверный логин или пароль');
+        return false;
+      }
 
-      const payload = jwtDecode<User>(data.access_token)
-      currentUser.value = payload
+      accessToken.value = data.access_token;
+      console.log(accessToken.value);
+
+      const payload = jwtDecode<User>(data.access_token);
+      currentUser.value = payload;
+
+      return true;
     } catch (error) {
       if (error instanceof Error) {
-        createNotification('error', `Ошибка авторизации: ${error.message}`)
+        createNotification('error', `Произошла ошибка: ${error.message}`);
       }
-      return false
+      return false;
     }
-
-    return true
   }
 
   async function logout() {
-    currentUser.value = null
-    accessToken.value = null
-    router.push('/login')
+    currentUser.value = null;
+    accessToken.value = null;
+    router.push('/login');
   }
 
   return {
@@ -48,5 +54,5 @@ export const useUserStore = defineStore('user', () => {
     accessToken,
     login,
     logout,
-  }
-})
+  };
+});
