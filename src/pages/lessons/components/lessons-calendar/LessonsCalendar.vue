@@ -17,6 +17,7 @@ const { lessons } = defineProps<{
   lessons: Lesson[];
 }>();
 const emit = defineEmits<{
+  'lesson-click': [lesson: Lesson];
   //   addTimeslot: [timeslot: Pick<Lesson, 'start' | 'end' | 'type'>]
   //   cancelTimeslot: [id: number]
   //   editTimeslot: [id: number, timeslot: Partial<Timeslot>]
@@ -39,12 +40,19 @@ const getCalendarOptions = (): CalendarOptions => ({
   },
   locale: ruLocale,
   selectable: true,
-  select: onSelect,
-  eventClick: onEventClick,
+  select: ({ start }: DateSelectArg) => {
+    console.log('Date click', start);
+  },
+  eventClick: ({ event }: EventClickArg) =>
+    emit(
+      'lesson-click',
+      lessons.find((l) => l.id === +event.id),
+    ),
 });
 
 const events = computed(() =>
   lessons.map((lesson) => ({
+    id: String(lesson.id),
     title: lesson.student.name,
     start: lesson.datetime,
     end: dayjs(lesson.datetime).add(1, 'h').toDate(),
@@ -77,15 +85,6 @@ const getEventColor = (
   };
 
   return options[lessonStatusType];
-};
-
-const onSelect = ({ start }: DateSelectArg) => {
-  //   addTimeslotModalVisible.value = true
-  //   selectedDate.value = start
-};
-
-const onEventClick = ({ event }: EventClickArg) => {
-  console.log(event);
 };
 </script>
 

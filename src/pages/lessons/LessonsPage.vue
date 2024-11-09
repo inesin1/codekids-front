@@ -24,13 +24,11 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const createLessonModalVisible = ref(false);
 const customRow = (record) => {
   return {
-    onClick: () => {
-      router.push({ name: 'LessonId', params: { id: record.id } });
-    },
+    onClick: goToLesson(record.id),
   };
 };
 const viewModes = reactive(['Календарь', 'Список']);
-const selectedViewMode = ref(viewModes[0]);
+const selectedViewMode = ref(localStorage.getItem('lessonsViewMode'));
 
 // Получаем данные с бэка
 const { getAllReactive, create } = useApi<Lesson>('lesson');
@@ -40,6 +38,10 @@ const { data, isFetching } = getAllReactive({
 });
 
 // Methods
+const goToLesson = (lessonId: number) => {
+  router.push({ name: 'LessonId', params: { id: lessonId } });
+};
+
 const saveLesson = async (lesson: Partial<Lesson>) => {
   try {
     await create(lesson);
@@ -47,6 +49,10 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
   } catch (e) {
     createNotification('error', e);
   }
+};
+
+const onViewModeChange = (value: string) => {
+  localStorage.setItem('lessonsViewMode', value);
 };
 </script>
 
@@ -62,12 +68,17 @@ const saveLesson = async (lesson: Partial<Lesson>) => {
       />
       <a-input-search v-model:value="search" placeholder="Поиск..." />
 
-      <a-segmented v-model:value="selectedViewMode" :options="viewModes" />
+      <a-segmented
+        v-model:value="selectedViewMode"
+        :options="viewModes"
+        @change="onViewModeChange"
+      />
     </a-space>
 
     <lessons-calendar
       v-if="selectedViewMode === viewModes[0]"
       :lessons="data"
+      @lesson-click="(lesson) => goToLesson(lesson.id)"
     />
 
     <a-table
