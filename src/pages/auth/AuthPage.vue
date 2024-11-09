@@ -1,28 +1,25 @@
 <script lang="ts" setup>
-import { useUserStore } from '../../stores/user.store'
-import { ref } from 'vue'
-import { AuthData } from '../../types/auth'
-import { useRouter } from 'vue-router'
+import { useUserStore } from '../../stores/user.store';
+import { ref } from 'vue';
+import { AuthData } from '../../types/auth';
+import { useRouter } from 'vue-router';
 
 // Data
-const router = useRouter()
-const { login } = useUserStore()
+const router = useRouter();
+const { login } = useUserStore();
 const formState = ref<AuthData>({
   username: '',
   password: '',
-})
+});
+const isError = ref(false);
 
 // Methods
 const onFinish = async (values: AuthData) => {
-  const success = await login(values)
+  const success = await login(values);
   if (success) {
-    await router.push('/')
+    await router.push('/');
   }
-}
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
+};
 </script>
 
 <template>
@@ -45,7 +42,7 @@ const onFinishFailed = (errorInfo: any) => {
         name="basic"
         autocomplete="off"
         @finish="onFinish"
-        @finish-failed="onFinishFailed"
+        @finish-failed="isError = true"
       >
         <a-form-item
           name="username"
@@ -70,6 +67,14 @@ const onFinishFailed = (errorInfo: any) => {
           </div>
         </a-form-item>
       </a-form>
+
+      <a-alert
+        v-if="isError"
+        message="Ошибка"
+        description="Неверный логин или пароль"
+        type="error"
+        show-icon
+      />
     </a-card>
   </div>
 </template>
