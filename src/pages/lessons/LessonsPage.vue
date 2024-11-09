@@ -24,7 +24,7 @@ const dateFormatList = ['DD/MM/YYYY', 'DD/MM/YY'];
 const createLessonModalVisible = ref(false);
 const customRow = (record) => {
   return {
-    onClick: goToLesson(record.id),
+    onClick: () => goToLesson(record.id),
   };
 };
 const viewModes = reactive(['Календарь', 'Список']);
